@@ -13,7 +13,11 @@ import type { OnNameLookupHandler } from '@metamask/snaps-sdk';
 export const onNameLookup: OnNameLookupHandler = async (request) => {
   const { chainId: chainIdEip155, address, domain } = request;
 
-  const name = domain?.slice(2) || '';
+  let name = domain;
+
+  if (name?.startsWith('$:')) name = name?.slice(2) || '';
+  if (name?.endsWith('.self')) name = name?.slice(0, -5) || '';
+
   const chainId = chainIdEip155.slice(7);
 
   if (address) {
